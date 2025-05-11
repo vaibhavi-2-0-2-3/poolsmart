@@ -7,6 +7,7 @@ import { Menu, X } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { WalletDropdown } from "../wallet/WalletDropdown";
 import { useWeb3 } from "@/hooks/useWeb3";
+import { ThemeToggle } from "./ThemeToggle";
 
 export function Navbar() {
   const isMobile = useIsMobile();
@@ -14,6 +15,8 @@ export function Navbar() {
   const { address, disconnect } = useWeb3();
   const location = useLocation();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+
+  // ... keep existing code (navLinks, isActive, closeMenu, handleDisconnect, handleCopyAddress functions)
 
   const navLinks = [
     { name: "Home", path: "/" },
@@ -29,13 +32,13 @@ export function Navbar() {
   };
 
   const closeMenu = () => setIsMenuOpen(false);
-  
+
   const handleDisconnect = () => {
     console.log("Disconnecting wallet in Navbar");
     disconnect();
     setIsDropdownOpen(false);
   };
-  
+
   const handleCopyAddress = () => {
     if (address) {
       navigator.clipboard.writeText(address);
@@ -59,14 +62,17 @@ export function Navbar() {
 
         {isMobile ? (
           <>
-            <Button
-              variant="ghost"
-              size="icon"
-              className="md:hidden"
-              onClick={() => setIsMenuOpen(!isMenuOpen)}
-            >
-              {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-            </Button>
+            <div className="flex items-center gap-2">
+              <ThemeToggle />
+              <Button
+                variant="ghost"
+                size="icon"
+                className="md:hidden"
+                onClick={() => setIsMenuOpen(!isMenuOpen)}
+              >
+                {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+              </Button>
+            </div>
 
             {isMenuOpen && (
               <div className="fixed inset-0 top-16 z-50 bg-background/95 p-6 flex flex-col gap-4 border-t animate-in fade-in slide-in-from-top">
@@ -115,7 +121,8 @@ export function Navbar() {
                 </Link>
               ))}
             </nav>
-            <div className="pl-6 border-l border-border">
+            <div className="pl-6 border-l border-border flex items-center gap-4">
+              <ThemeToggle />
               {address ? (
                 <div className="relative wallet-dropdown">
                   <Button
@@ -130,7 +137,7 @@ export function Navbar() {
                       <span>{address.slice(0, 6)}...{address.slice(-4)}</span>
                     </span>
                   </Button>
-                  
+
                   {isDropdownOpen && (
                     <WalletDropdown
                       address={address}
